@@ -1,0 +1,139 @@
+﻿git 代码提交常用的命令
+
+基本命令 tag  log  diff blame
+
+查看代码行级修改
+	$ git blame fileName
+
+标签	
+	# 列出所有tag
+	$ git tag
+
+	# 新建一个tag在当前commit
+	$ git tag [tag]
+
+    # 创建一个带注解的标签 
+    # -a 选项意为"创建一个带注解的标签"。 不用 -a 选项也可以执行的，但它不会记录这标签是啥时候打的，谁打的，也不会让你添加个标签的注解
+    $ git tag -a v1.0 
+    
+	# 新建一个tag在指定commit
+	$ git tag [tag] [commit]
+
+	# 删除本地tag
+	$ git tag -d [tag]
+
+	# 删除远程tag
+	$ git push origin :refs/tags/[tagName]
+
+	# 查看tag信息
+	$ git show [tag]
+
+	# 提交指定tag
+	$ git push [remote] [tag]
+
+	# 提交所有tag
+	$ git push [remote] --tags
+
+	# 拉取远程分支同时在 本地新建分支
+	$ git checkout -b dev origin/dev
+	# 拉取远程分支同时和本地分支合并
+	$ git checkout dev origin/dev
+	
+	# 新建一个分支，指向某个tag
+	$ git checkout -b [branch] [tag]
+	
+	
+查看信息
+	# 显示有变更的文件
+	$ git status
+
+	# 显示当前分支的版本历史
+	$ git log
+	$ git log --oneline
+	
+	# 如果嫌输出信息太多，看得眼花缭乱的，可以试试加上--pretty=oneline参数
+	$ git log --pretty=oneline
+    
+    # 只显示提交信息的第一行
+	$ git log --pretty=short
+	
+    # 显示过去5次提交
+	$ git log -5 --pretty --oneline
+	
+	# 显示commit历史，以及每次commit发生变更的文件
+	$ git log --stat
+
+	# 搜索提交历史，根据关键词
+	$ git log -S [keyword]
+
+	# 显示某个commit之后的所有变动，每个commit占据一行
+	$ git log [tag] HEAD --pretty=format:%s
+
+	# 显示某个commit之后的所有变动，其"提交说明"必须符合搜索条件
+	$ git log [tag] HEAD --grep feature
+
+	# 显示某个文件的版本历史，包括文件改名
+	$ git log --follow [file]
+	$ git whatchanged [file]
+
+	# 显示指定文件相关的每一次diff  显示文件的改动
+	$ git log -p [file]
+
+    # 只显示指定目录、文件的日志
+    $ git log README.md
+
+	# 分支的合并后显示log
+	$ git log --oneline --graph --decorate
+
+	# 看看分支历史
+	$ git log --graph --pretty=oneline --abbrev-commit
+	
+	# 以图表形式查看分支
+	$ git log --graph
+	
+	# 显示所有提交过的用户，按提交次数排序
+	$ git shortlog -sn
+
+	# 显示指定文件是什么人在什么时间修改过
+	$ git blame [file]
+
+	# 显示某次提交的元数据和内容变化
+	$ git show [commit]
+
+	# 显示某次提交发生变化的文件
+	$ git show --name-only [commit]
+
+	# 显示某次提交时，某个文件的内容
+	$ git show [commit]:[filename]
+
+	# 显示当前分支的最近几次提交
+	$ git reflog
+
+	# 从本地master拉取代码更新当前分支：branch 一般为master
+	$ git rebase [branch]
+	
+	# 查看内容
+	$ git cat index.html
+	
+	# Git bash中运行git log之后怎样终止这个命令
+	查看git log中，一直出现冒号： ，   如果想要退出，那么就需要使用命令字符 q
+	
+对比
+	# 显示暂存区和工作区的代码差异
+	$ git diff
+
+	# 显示暂存区和上一个commit的差异
+	$ git diff --cached [file]
+
+	# 显示工作区与当前分支最新commit之间的差异
+	$ git diff HEAD
+
+	# 显示两次提交之间的差异
+	$ git diff [first-branch]...[second-branch]
+
+	# 显示今天你写了多少行代码
+	$ git diff --shortstat "@{0 day ago}"
+	# 查看工作区和版本库里面最新版本的区别
+	git diff HEAD -- readme.txt
+
+
