@@ -1,0 +1,99 @@
+﻿
+
+这21个刁钻的HashMap面试题，我把阿里面试官吊打了
+    https://cloud.tencent.com/developer/article/1629452
+
+
+HashMap为什么用到它
+    HashMap可以接受null键值和值，而HashTable则不能
+    HashMap是非synchronized
+    HashMap很快
+    以及HashMap储存的是键值对
+    
+
+如果两个键的hashcode相同，你如何获取值对象？
+    HashMap会使用键对象的hashcode找到bucket位置，找到bucket位置之后，会调用keys.equals()方法去找到LinkedList中正确的节点，最终找到要找的值对象。
+    从HashMap中get元素时，首先计算key的hashCode，找到数组中对应位置的某一元素，然后通过key的equals方法在对应位置的链表中找到需要的元素
+
+
+HashTable和HashMap的区别有哪些？
+    HashMap和Hashtable都实现了Map接口，但决定用哪一个之前先要弄清楚它们之间的分别。主要的区别有：线程安全性，同步(synchronization)，以及速度。
+
+    理解HashMap是Hashtable的轻量级实现（非线程安全的实现，hashtable是非轻量级，线程安全的），都实现Map接口，主要区别在于：
+
+    1、由于HashMap非线程安全，在只有一个线程访问的情况下，效率要高于HashTable
+
+    2、HashMap允许将null作为一个entry的key或者value，而Hashtable不允许。
+
+    3、HashMap把Hashtable的contains方法去掉了，改成containsValue和containsKey。因为contains方法容易让人引起误解。
+
+    4、Hashtable继承自陈旧的Dictionary类，而HashMap是Java1.2引进的Map 的一个实现。
+
+    5、Hashtable和HashMap扩容的方法不一样，HashTable中hash数组默认大小11，扩容方式是 old*2+1。HashMap中hash数组的默认大小是16，而且一定是2的指数，
+        增加为原来的2倍，没有加1。
+
+    6、两者通过hash值散列到hash表的算法不一样，HashTbale是古老的除留余数法，直接使用hashcode，而后者是强制容量为2的幂，重新根据hashcode计算hash值，
+        在使用hash  位与  （hash表长度 – 1），也等价取膜，但更加高效，取得的位置更加分散，偶数，奇数保证了都会分散到。前者就不能保证。
+
+    7、另一个区别是HashMap的迭代器(Iterator)是fail-fast迭代器，而Hashtable的enumerator迭代器不是fail-fast的。
+        所以当有其它线程改变了HashMap的结构（增加或者移除元素），将会抛出ConcurrentModificationException，
+        但迭代器本身的remove()方法移除元素则不会抛出ConcurrentModificationException异常。但这并不是一个一定发生的行为，要看JVM。
+        这条同样也是Enumeration和Iterator的区别。    
+    
+    8、HashMap可以存储null键和null值 Hashtable不可以存储null键和null值
+    
+    9、HashMap是线程不安全的  效率高   Hashtable是线程安全的，效率低，它的每个方法中都加入了Synchronize方法
+    
+    10、初始容量大小和每次扩充容量大小的不同 
+        Hashtable默认的初始大小为11，之后每次扩充，容量变为原来的2n+1。HashMap默认的初始化大小为16。之后每次扩充，容量变为原来的2倍
+
+
+
+为什么HashMap是线程不安全的，实际会如何体现？
+    第一，如果多个线程同时使用put方法添加元素
+
+    假设正好存在两个put的key发生了碰撞(hash值一样)，那么根据HashMap的实现，这两个key会添加到数组的同一个位置，
+    这样最终就会发生其中一个线程的put的数据被覆盖。
+
+    第二，如果多个线程同时检测到元素个数超过数组大小*loadFactor
+
+    这样会发生多个线程同时对hash数组进行扩容，都在重新计算元素位置以及复制数据，但是最终只有一个线程扩容后的数组会赋给table，
+    也就是说其他线程的都会丢失，并且各自线程put的数据也丢失。且会引起死循环的错误。        
+    
+    
+能否让HashMap实现线程安全，如何做？
+    1、直接使用Hashtable，但是当一个线程访问HashTable的同步方法时，其他线程如果也要访问同步方法，会被阻塞住。
+        举个例子，当一个线程使用put方法时，另一个线程不但不可以使用put方法，连get方法都不可以，效率很低，现在基本不会选择它了。
+
+    2、HashMap可以通过下面的语句进行同步：
+
+    Collections.synchronizeMap(hashMap);
+    
+HashMap 中 put 方法过程？
+    1.对key的hashCode做hash操作，然后再计算在bucket中的index（1.5 HashMap的哈希函数）；
+    2.如果没碰撞直接放到bucket里；
+    3.如果碰撞了，以链表的形式存在buckets后；
+    4.如果节点已经存在就替换old value(保证key的唯一性)
+    5.如果bucket满了(超过阈值，阈值=loadfactor*current capacity，load factor默认0.75)，就要resize
+  
+分布式有哪些理论？
+    CAP、BASE。
+    分布式CAP理论，任何一个分布式系统都无法同时满足Consistency(一致性)、Availability(可用性)、Partition tolerance(分区容错性) 这三个基本需求。最多只能满足其中两项。
+    而Partition tolerance(分区容错性) 是必须的，因此一般是CP，或者AP。    
+    
+你怎么理解分布式一致性？
+    数据一致性通常指关联数据之间的逻辑关系是否正确和完整。
+    在分布式系统中，数据一致性往往指的是由于数据的复制，不同数据节点中的数据内容是否完整并且相同。
+    一致性还分为强一致性，弱一致性，还有最终一致性。
+    强一致性就是马上就保持一致。
+    最终一致性是指经过一段时间后，可以保持一致    
+    
+    
+java面试题：分布式    
+ https://www.cnblogs.com/expiator/p/10201004.html   
+    
+    
+    
+    
+    
+    

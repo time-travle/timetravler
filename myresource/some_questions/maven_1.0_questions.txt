@@ -118,10 +118,29 @@ git commit -m '添加多个源代码目录、多个资源文件目录配置'
 
 
 
+6、maven跳过单元测试-maven.test.skip和skipTests的区别
 
+    skipTests，不执行测试用例，但编译测试用例类生成相应的class文件至target/test-classes下。
+    maven.test.skip=true，不执行测试用例，也不编译测试用例类。
 
+    可以在pom.xml文件中修改
 
-
+    <plugin>  
+        <groupId>org.apache.maven.plugin</groupId>  
+        <artifactId>maven-compiler-plugin</artifactId>  
+        <version>2.1</version>  
+        <configuration>  
+            <skip>true</skip>  
+        </configuration>  
+    </plugin>  
+    <plugin>  
+        <groupId>org.apache.maven.plugins</groupId>  
+        <artifactId>maven-surefire-plugin</artifactId>  
+        <version>2.5</version>  
+        <configuration>  
+            <skip>true</skip>  
+        </configuration>  
+    </plugin>
 
 
 
