@@ -29,4 +29,17 @@ Spring Cloud 模块相关介绍如下：
 
 
 
+微服务的优缺点
+    1、易于开发和维护
+    2、启动较快
+    3、局部修改容易部署
+    4、技术栈不受限
+    5、按需伸缩
+    6、DevOps
+
+服务治理框架
+
+（1）Dubbo（http://dubbo.io/）、Dubbox（当当网对Dubbo的扩展）
+（2）Netflix的Eureka、Apache的Consul等。
+Spring Cloud Eureka是对Netflix的Eureka的进一步封装。
 

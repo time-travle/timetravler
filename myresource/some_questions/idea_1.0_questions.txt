@@ -4,7 +4,13 @@
 2、模板问题
 	https://blog.csdn.net/sdut406/article/details/81750858
 	
-3、
+3、html 格式化时 boday head 无法缩进
+    https://blog.csdn.net/qq_42143163/article/details/99312857
+    1.找到File>Settings
+    2.找到Settings>Editor>HTML
+    3.找到HTML>Other>Do not indent children on
+    4.把html、body、head删除掉即可，点击ok即可
+ 
 4、
 5、
 6、

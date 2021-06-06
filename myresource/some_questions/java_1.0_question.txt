@@ -1,15 +1,64 @@
 ﻿
-
 这21个刁钻的HashMap面试题，我把阿里面试官吊打了
     https://cloud.tencent.com/developer/article/1629452
+java面试题:HashMap面试题
+    https://songzixian.com/javabook/265.html
+
+https://blog.csdn.net/ChrisLu777/article/details/106617512
+https://www.cnblogs.com/zengcongcong/p/11295349.html
 
 
-HashMap为什么用到它
+HashMap为什么用到它  
+    HashMap 底层是 数组和链表
     HashMap可以接受null键值和值，而HashTable则不能
     HashMap是非synchronized
     HashMap很快
     以及HashMap储存的是键值对
+
+
+HashMap 的工作原理？
+
+    HashMap 底层是 hash 数组和单向链表实现，数组中的每个元素都是链表， jdk8后采用数组+链表+红黑树的数据结构
+    由 Node 内部类（实现 Map.Entry<K,V>接口）实现，HashMap 通过 put & get 方法存储和获取。
+
+    存储对象时，将 K/V 键值传给 put() 方法：
+    ①、调用 hash(K) 方法计算 K 的 hash 值，然后结合数组长度，计算得数组下标；
+    ②、调整数组大小（当容器中的元素个数大于 capacity * loadfactor 时，容器会进行扩容resize 为 2n）；
+    ③、i.如果 K 的 hash 值在 HashMap 中不存在，则执行插入，若存在，则发生碰撞；
+        ii.如果 K 的 hash 值在 HashMap 中存在，且它们两者 equals 返回 true，则更新键值对；
+        iii. 如果 K 的 hash 值在 HashMap 中存在，且它们两者 equals 返回 false，则插入链表的尾部（尾插法）或者红黑树中（树的添加方式）。
+
+    （JDK 1.7 之前使用头插法、JDK 1.8 使用尾插法）
+    （注意：当碰撞导致链表大于 TREEIFY_THRESHOLD = 8 时，就把链表转换成红黑树）
+
+    获取对象时，将 K 传给 get() 方法：
+        ①、调用 hash(K) 方法（计算 K 的 hash 值）从而获取该键值所在链表的数组下标；
+        ②、顺序遍历链表，equals()方法查找相同 Node 链表中 K 值对应的 V 值。
+
+    hashCode 是定位的，存储位置；equals是定性的，比较两者是否相等
+
     
+当两个对象的 hashCode 相同会发生什么？
+    A：因为 hashCode 相同，不一定就是相等的（equals方法比较），所以两个对象所在数组的下标相同，"碰撞"就此发生。
+    又因为 HashMap 使用链表存储对象，这个 Node 会存储到链表中。
+
+
+HashMap & TreeMap & LinkedHashMap 使用场景？
+    一般情况下，使用最多的是 HashMap。
+    HashMap：在 Map 中插入、删除和定位元素时；
+    TreeMap：在需要按自然顺序或自定义顺序遍历键的情况下；
+    LinkedHashMap：在需要输出的顺序和输入的顺序相同的情况下
+
+
+HashMap 和 HashTable 有什么区别？
+        ①、HashMap 是线程不安全的，HashTable 是线程安全的；
+        ②、由于线程安全，所以 HashTable 的效率比不上 HashMap；
+        ③、HashMap最多只允许一条记录的键为null，允许多条记录的值为null，而 HashTable 不允许；
+        ④、HashMap 默认初始化数组的大小为16，HashTable 为 11，前者扩容时，扩大两倍，后者扩大两倍+1；
+        ⑤、HashMap 需要重新计算 hash 值，而 HashTable 直接使用对象的 hashCode
+
+https://www.jianshu.com/p/75adf47958a7
+
 
 如果两个键的hashcode相同，你如何获取值对象？
     HashMap会使用键对象的hashcode找到bucket位置，找到bucket位置之后，会调用keys.equals()方法去找到LinkedList中正确的节点，最终找到要找的值对象。
@@ -75,6 +124,20 @@ HashMap 中 put 方法过程？
     3.如果碰撞了，以链表的形式存在buckets后；
     4.如果节点已经存在就替换old value(保证key的唯一性)
     5.如果bucket满了(超过阈值，阈值=loadfactor*current capacity，load factor默认0.75)，就要resize
+
+
+hashMap中put是如何实现的？
+    1.计算关于key的hashcode值（与Key.hashCode的高16位做异或运算）
+    2.如果散列表为空时，调用resize()初始化散列表
+    3.如果没有发生碰撞，直接添加元素到散列表中去
+    4.如果发生了碰撞(hashCode值相同)，进行三种判断
+        4.1:若key地址相同或者equals后内容相同，则替换旧值
+        4.2:如果是红黑树结构，就调用树的插入方法
+        4.3：链表结构，循环遍历直到链表中某个节点为空，尾插法进行插入，插入之后判断链表个数是否到达变成红黑树的阙值8；
+            也可以遍历到有节点与插入元素的哈希值和内容相同，进行覆盖。
+    5.如果桶满了大于阀值，则resize进行扩容
+https://www.cnblogs.com/zengcongcong/p/11295349.html
+
   
 分布式有哪些理论？
     CAP、BASE。
@@ -93,7 +156,113 @@ java面试题：分布式
  https://www.cnblogs.com/expiator/p/10201004.html   
     
     
+JAVA中集合类型都有哪些？各有什么特点？
+    Collection两大体系：链表List、集合Set
+
+    List特点：元素有序；元素可以重复；元素都有索引（角标）
+    List里存放的对象是有序的，同时也是可以重复的，List关注的是索引，拥有一系列和索引相关的方法，查询速度快。
+    因为往list集合里插入或删除数据时，会伴随着后面数据的移动，所有插入删除数据速度慢。
+
+    Set特点：元素无序；元素不可以重复；
+    Set里存放的对象是无序，不能重复的，集合中的对象不按特定的方式排序，只是简单地把对象加入集合中。
+
+    同时集合中还有另外一种类型：Map(映射)。
+
+    Map特点：键值对；键不可以重复；值可以重复；
+    Map集合中存储的是键值对，键不能重复，值可以重复。根据键得到值，对map集合遍历时先得到键的set集合，对set集合进行遍历，得到相应的值。     
     
     
-    
-    
+集合结构
+    Map
+        HashMap
+            Linkedhashmap
+        Treemap
+        
+    Collection
+        Set
+            EnumSet
+            SortedSet
+                TreeSet
+            HashSet
+                LlinkedHashSet
+        List
+            LinkedList 线程不安全
+                LinkedList实现了List接口，允许null元素。此外LinkedList提供额外的get，remove，insert方法在LinkedList的首部或尾部。
+                这些操作使LinkedList可被用作堆栈（stack），队列（queue）或双向队列（deque）。
+                注意LinkedList没有同步方法。如果多个线程同时访问一个List，则必须自己实现访问同步。一种解决方法是在创建List时构造一个同步的List：
+                List list = Collections.synchronizedList(new LinkedList(…))
+            ArrayList 线程不安全
+                ArrayList实现了可变大小的数组。它允许所有元素，包括null。ArrayList没有同步。
+                size，isEmpty，get，set方法运行时间为常数。但是add方法开销为分摊的常数，添加n个元素需要O(n)的时间。其他的方法运行时间为线性。
+                每个ArrayList实例都有一个容量（Capacity），即用于存储元素的数组的大小。这个容量可随着不断添加新元素而自动增加，但是增长算法并没有定义。
+                当需要插入大量元素时，在插入前可以调用ensureCapacity方法来增加ArrayList的容量以提高插入效率。
+                和LinkedList一样，ArrayList也是非同步的（unsynchronized）
+            Vector 线程安全
+                Vector非常类似ArrayList，但是Vector是同步的。由Vector创建的Iterator，虽然和ArrayList创建的Iterator是同一接口，
+                但是，因为Vector是同步的，当一个Iterator被创建而且正在被使用，
+                另一个线程改变了Vector的状态（例如，添加或删除了一些元素），这时调用Iterator的方法时将抛出ConcurrentModificationException，因此必须捕获该异常。
+
+                Stack
+                    Stack继承自Vector，实现一个后进先出的堆栈
+        Queue
+            Deque
+                LinkedList
+            PriorityQueue
+            
+
+
+https://www.jb51.net/article/92231.htm
+在JAVA中，闭包是通过“接口+内部类”实现，JAVA的内部类也可以有匿名内部类。
+闭包的价值在于可以作为函数对象或者匿名函数，持有上下文数据，作为第一级对象进行传递和保存。
+闭包广泛用于回调函数、函数式编程中
+
+
+闭包简单实例：
+
+    package Test;
+    public class Test {
+        private int data=0;
+        private class Inner{
+            void print()
+              {
+                System.out.println(Test.this.data);
+            }
+        }
+        Inner getInnerInstance()
+         {
+            return new Inner();
+        }
+        /**
+     * @param args
+     */
+        public static void main(String[] args) {
+            // TODO Auto-generated method stub
+            Test t1=new Test();
+            t1.data=1;
+            Test t2=new Test();
+            t2.data=2;
+            Inner inner1=t1.getInnerInstance();
+            Inner inner2=t2.getInnerInstance();
+            inner1.print();
+            //1
+            inner2.print();
+            //2
+        }
+    }  
+
+
+内部类。
+    在JAVA中，内部类可以访问到外围类的变量、方法或者其它内部类等所有成员，即使它被定义成private了，但是外部类不能访问内部类中的变量。
+    这样通过内部类就可以提供一种代码隐藏和代码组织的机制，并且这些被组织的代码段还可以自由地访 问到包含该内部类的外围上下文环境。    
+局部内部类。
+　　局部内部类是指在方法的作用域内定义的的内部类。
+匿名内部类。
+　　顾名思义，匿名内部类就是匿名、没有名字的内部类，通过匿名内部类可以更加简洁的创建一个内部类。
+final关键字。
+    闭包所绑定的本地变量必须使用final修饰符，以表示为一个恒定不变的数据，创建后不能被更改。
+
+闭包的问题。
+    让某些对象的生命周期加长。
+    让自由变量的生命周期变长，延长至回调函数执行完毕。
+闭包共享。
+    final关键字    

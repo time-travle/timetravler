@@ -1,0 +1,49 @@
+﻿1、什么情况下数据库索引会失效
+    a、如果条件中有or，即使其中有条件带索引也不会使用(这也是为什么尽量少用or的原因)
+        要想使用or，又想让索引生效，只能将or条件中的每个列都加上索引
+    
+    b、对于多列索引，不是使用的第一部分，则不会使用索引
+    c、like查询是以%开头
+    d、如果列类型是字符串，那一定要在条件中将数据使用引号引用起来,否则不使用索引
+    
+    e、在where子句中进行null值判断的话会导致引擎放弃索引而产生全表扫描
+    f、避免在where子句中使用!= ,< >这样的符号,否则会导致引擎放弃索引而产生全表扫描
+    g、避免在where子句中使用or来连接条件,因为如果俩个字段中有一个没有索引的话,引擎会放弃索引而产生全表扫描
+    
+    h、在使用联合索引是要注意最左原则
+    
+2、分析sql 的关键字 explain + 语句
+
+3、连表查询
+    外连接可分为：左连接、右连接、完全外连接。
+
+        1、左连接  left join 或 left outer join
+            SQL语句：select * from student left join course on student.ID=course.ID
+            左外连接包含left join左表所有行，如果左表中某行在右表没有匹配，则结果中对应行右表的部分全部为空(NULL).
+
+
+        2、右连接  right join 或 right outer join
+            SQL语句：select * from student right join course on student.ID=course.ID
+            右外连接包含right join右表所有行，如果左表中某行在右表没有匹配，则结果中对应左表的部分全部为空(NULL)。
+        
+        3、完全外连接  full join 或 full outer join
+            SQL语句：select * from student full join course on student.ID=course.
+            完全外连接包含full join左右两表中所有的行，如果右表中某行在左表中没有匹配，则结果中对应行右表的部分全部为空(NULL)，
+            如果左表中某行在右表中没有匹配，则结果中对应行左表的部分全部为空(NULL)。
+         
+    内连接  join 或 inner join
+
+        SQL语句：select * from student inner join course on student.ID=course.ID
+
+        inner join 是比较运算符，只返回符合条件的行。
+        此时相当于：select * from student,course where student.ID=course.ID     
+    
+    交叉连接 cross join
+
+        1.概念：没有 WHERE 子句的交叉联接将产生连接所涉及的表的笛卡尔积。第一个表的行数乘以第二个表的行数等于笛卡尔积结果集的大小。
+        SQL语句：select * from student cross join course
+        
+        如果我们在此时给这条SQL加上WHERE子句的时候比如SQL:select * from student cross join course where student.ID=course.ID
+        此时将返回符合条件的结果集，结果和inner join所示执行结果一样
+        
+        
