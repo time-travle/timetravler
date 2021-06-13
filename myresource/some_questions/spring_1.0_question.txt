@@ -1,0 +1,45 @@
+﻿Spring常见面试题
+    https://www.w3cschool.cn/fisug/
+
+69道Spring面试题和答案    
+    http://ifeve.com/spring-interview-questions-and-answers/
+    
+    
+怎样开启注解装配？
+    注解装配在默认情况下是不开启的，为了使用注解装配，我们必须在Spring配置文件中配置 <context:annotation-config/>元素    
+
+将一个类声明为Spring的 bean 的注解有哪些?
+    我们一般使用 @Autowired 注解自动装配 bean，要想把类标识成可用于 @Autowired 注解自动装配的 bean 的类,采用以下注解可实现：
+
+    @Component ：通用的注解，可标注任意类为 Spring 组件。如果一个Bean不知道属于拿个层，可以使用@Component 注解标注。
+    @Repository : 对应持久层即 Dao 层，主要用于数据库相关操作。
+    @Service : 对应服务层，主要涉及一些复杂的逻辑，需要用到 Dao层。
+    @Controller : 对应 Spring MVC 控制层，主要用户接受用户请求并调用 Service 层返回数据给前端页面
+
+
+
+
+Spring如何解决循环依赖问题： https://www.cnblogs.com/xiaoxing/p/10762686.html
+    https://www.zhihu.com/question/438247718
+  生成代理对象产生的循环依赖
+    这类循环依赖问题解决方法很多，主要有：
+
+    使用@Lazy注解，延迟加载
+    使用@DependsOn注解，指定加载先后关系
+    修改文件名称，改变循环依赖类的加载顺序
+  使用@DependsOn产生的循环依赖
+    这类循环依赖问题要找到@DependsOn注解循环依赖的地方，迫使它不循环依赖就可以解决问题。
+
+  多例循环依赖
+    这类循环依赖问题可以通过把bean改成单例的解决。
+
+  构造器循环依赖
+    这类循环依赖问题可以通过使用@Lazy注解解决。
+
+    实现原理：http://zengbingo.com/p/1985.html
+        1.先加载A，依次判断(一级缓存)、(二级缓存)、(三级缓存)中是否有A，没有就将A加入(三级缓存)
+        2.A依赖B，先加载B
+        2.1 依次判断(一级缓存)、(二级缓存)、(三级缓存)中是否有B,没有就将B加入(三级缓存)
+        2.2 加载B的依赖，发现依赖A，依次从(一级缓存)、(二级缓存)、(三级缓存)中查找A，发现(三级缓存)有A，将A上升到(二级缓存)中
+        2.3 将A注入B的引用，完成B的加载，将B从(三级缓存)升级至(一级缓存)中
+        3.A依赖的B加载完了，继续加载A完成。将A从(二级缓存)上升到(一级缓存)。        

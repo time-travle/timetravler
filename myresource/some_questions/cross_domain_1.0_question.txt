@@ -65,9 +65,17 @@
         </dependency>
 
 
+Spring MVC自带的跨域问题解决方案
 
+    Spring MVC 已经有很好的解决方案了 直接添加一个注解( @CrossOrigin) 即可解决跨域问题
+    或者
+    <mvc:cors>
+        <mvc:mapping path="/**" allowed-origins="*" allow-credentials="true" max-age="1800"
+        allowed-methods="GET,POST,PUT,DELETE,PATCH,OPTIONS"/>
+    </mvc:cors>
 
-
+带有cookie的跨域问题
+    带有cookie时，配置Access-Control-Allow-Origin项不能为*，必须是具体的值！
 
 
 

@@ -1,8 +1,23 @@
-﻿Java 系统中主要有三种方式来实现定时任务：
+﻿使用SpringBoot创建定时任务非常简单，目前主要有以下三种创建方式：
+    一、基于注解(@Scheduled)
+    二、基于接口（SchedulingConfigurer） 前者相信大家都很熟悉，但是实际使用中我们往往想从数据库中读取指定时间来动态执行定时任务，
+        这时候基于接口的定时任务就派上用场了。
+    三、基于注解设定多线程定时任务
+
+Java 系统中主要有三种方式来实现定时任务：
 
 Timer和 TimerTask
 ScheduledExecutorService
 三方框架 Quartz
+
+
+@Scheduled(cron = "0/5 * * * * ?") Cron表达式参数分别表示：
+    秒（0~59） 例如0/5表示每5秒
+    分（0~59）
+    时（0~23）
+    日（0~31）的某天，需计算
+    月（0~11）
+    周几（ 可填1-7 或 SUN/MON/TUE/WED/THU/FRI/SAT）
 
 
 四种方式：Timer、ScheduledExecutorService、SpringTask、Quartz。
@@ -20,10 +35,10 @@ ScheduledExecutorService
             }, date,2000);
         } catch (ParseException e) {
             e.printStackTrace();
-        }
-        解释：date是开始时间，2000ms是定时任务周期，每2s执行一次
-        timer有2中方法schedule和scheduleAtFixedRate，前者会等任务结束在开始计算时间间隔，后者是在任务开始就计算时间，有并发的情况
+        }者是在任务开始就计算时间，有并发的情况
         
+        解释：date是开始时间，2000ms是定时任务周期，每2s执行一次
+        timer有2中方法schedule和scheduleAtFixedRate，前者会等任务结束在开始计算时间间隔，后
     使用ScheduledExecutorService
         scheduledExecutorService.schedule(new Runnable() {
                     @Override

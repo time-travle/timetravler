@@ -27,6 +27,8 @@ demo：
         private  String  threadNamePrefix  =”FSH-AsyncTask-”; 
         // get  set 
     }
+    
+    
     @Configuration 
     public  class  AsyncTaskExecutePool  implements  AsyncConfigurer  { 
     private  Logger  logger  = 
