@@ -1,0 +1,35 @@
+﻿Oracle 数据库中 SYS、SYSTEM、DBSNMP、SYSMAN 四用户的区别 用户： 
+
+SYS 用户： SYS，默认密码为 CHANGE_ON_INSTALL,当创建一个数据库时，SYS 用户将被默认 创建并授予 DBA 角色，
+所有数据库数据字典中的基本表和视图都存储在名为 SYS 的方案中，这些基本表和视图对于 Oracle 数据库的操作时非常重要的。
+为了维 护数据字典的真实性，SYS 方案中的表只能由系统来维护，他们不能被任何用户 或数据库管理员修改，而且任何用户不能在 SYS 方案中创建表。 
+
+SYSTEM 用户： SYSTEM，默认密码为 MANAGER，与 SYS 一样，在创建 Oracle 数据库时，SYSTEM 用户被默认创建并被授予 DBA 角色，
+用于创建显示管理信息的表或视图，以及被 各种 Oracle 数据库应用和工具使用的内容表或视图。
+
+DBSNMP 用户： DBSNMP 是 Oracle 数据库中用于智能代理（Intelligent Agent）的用户，用来 监控和管理数据库相关性能的用户，如果停止该用户，
+则无法提取相关的数据信息； 
+
+SYSMAN 用户： SYSMAN 是 Oracle 数据库中用于 EM 管理的用户，如果你不用该用户，也可以删 除。
+
+
+
+ sys 和 system 用户的区别 【system】用户只能用 normal 身份登陆 em。 
+ 【sys】用户具有“SYSDBA”或者“SYSOPER”权限，登陆 em 也只能用这两个身份，不能用 normal。 
+
+“SYSOPER”权限，即数据库操作员权限，权限包括： 打开数据库服务器、 关闭数据库服务器、 备份数据库 日志归档、 恢复数据库、 会话限制
+
+“SYSDBA”权限，即数据库管理员权限，权限包括： 打开数据库服务器、 关闭数据库服务器、 备份数据库、 日志归档、 管理功能、 恢复数据库、 会话限制、
+
+  创建数据库 
+
+normal 、sysdba、 sysoper 有什么区别： normal 是普通用户。  另外两个，你考察他们所具有的权限就知道了，
+
+sysdba 拥有最高的系统权限 
+
+sysoper 主要用来启动、关闭数据库，
+
+sysoper 登陆后用户是
+
+public sysdba 登陆后是 sys
+

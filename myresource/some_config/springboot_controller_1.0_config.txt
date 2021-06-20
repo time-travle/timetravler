@@ -37,7 +37,7 @@
 
 
 
-        @ConfigurationProperties(pre丑x ＝” com.cxytiand 工”）
+        @ConfigurationProperties(prefix ＝” com.cxytiandi”）
         @Component 
         public  class  MyConfig  { 
             private  String  name; 

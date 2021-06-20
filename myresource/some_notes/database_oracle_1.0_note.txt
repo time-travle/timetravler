@@ -1,12 +1,26 @@
-﻿1、表
+﻿创建表空间：
+    create tablespace MYUSER_SPACE datafile 'E:\APP\ADMINISTRATOR\ORADATA\ORCL\MYUSER_SPACE_S01.DBF' size 1024m 
+    autoextend on next 2000M   
+    maxsize unlimited  
+    extent management local autoallocate   
+    segment space management auto ;
+
+
+1、表
 	--例：
-	创建表名为table1，列名为column1，column2，…，数据类型为特定数据类型的表
+	创建表名为 table1，列名为column1，column2，…，数据类型为特定数据类型的表
 	Create table table1（
-	Column1 datetype，
-	Column2 datetype,
-	……
+        Column1 datetype，
+        Column2 datetype,
+        ……
 	）；
-	
+	-- Add comments to the table 
+    comment on table table1
+      is 'comments';
+    -- Add comments to the columns 
+    comment on column table1.Column1
+      is 'comments';
+
 	--添加字段：在已经建好的表table1中添加字段columnX，字符类型为number
 	Alter table table1 add columnX number；
 	--修改字段数据类型：修改columnX的数据类型为date
@@ -20,29 +34,28 @@
 	--删除表：删除表table2：
 	Drop table table2；
 	
-	约束
-		1、添加主键约束（将stuNo作为主键）
-		alter table stuInfo add constraint PK_stuNo primary key (stuNo)
+约束
+    1、添加主键约束（将stuNo作为主键）
+    alter table stuInfo add constraint PK_stuNo primary key (stuNo)
 
-		2、添加外键约束 (主表stuInfo和从表stuMarks建立关系，关联字段stuNo)
-		alter table stuInfo add constraint FK_stuNo foreign key(stuNo) references stuinfo(stuNo)
+    2、添加外键约束 (主表stuInfo和从表stuMarks建立关系，关联字段stuNo)
+    alter table stuInfo add constraint FK_stuNo foreign key(stuNo) references stuinfo(stuNo)
 
-		3、添加唯一约束（身份证号唯一）
-		alter table stuInfo add constraint UQ_stuID unique(stuID)
+    3、添加唯一约束（身份证号唯一）
+    alter table stuInfo add constraint UQ_stuID unique(stuID)
 
-		4、添加默认约束（如果地址不填 默认为“地址不详”）
-		alter table stuInfo add constraint DF_stuAddress default (‘地址不详’) for stuAddress
+    4、添加默认约束（如果地址不填 默认为“地址不详”）
+    alter table stuInfo add constraint DF_stuAddress default (‘地址不详’) for stuAddress
 
-		5、添加检查约束 （对年龄加以限定 15-40岁之间）
-		alter table stuInfo add constraint CK_stuAge check (stuAge between 15 and 40)
+    5、添加检查约束 （对年龄加以限定 15-40岁之间）
+    alter table stuInfo add constraint CK_stuAge check (stuAge between 15 and 40)
 
-		6、添加表注释：学生信息表
-		comment on table STUINFO 
-		is '学生信息表';
+    6、添加表注释：学生信息表
+    comment on table STUINFO is '学生信息表';
 
-		7、添加列名称：学号
-		comment on column STUINFO.stuid is '学号';
-		comment on column STUINFO.stuname is '学生姓名';
+    7、添加列名称：学号
+    comment on column STUINFO.stuid is '学号';
+    comment on column STUINFO.stuname is '学生姓名';
 
 	
 2、视图
@@ -62,6 +75,19 @@
 	
 
 3、索引
+    创建索引
+        // 组合索引
+        create index 索引名 on 表名(列名a, 列名b); 
+    删除索引
+        drop index 索引名;
+        
+    查看索引
+        --查看该表的所有索引
+        select * from all_indexes where table_name = 'tablename';
+         
+        --查看该表的所有索引列
+        select* from all_ind_columns where table_name = 'tablename';
+
 	获得单个表和索引DDL语句的方法
 	　　set heading off;　　 
 	　　set echo off;　　 

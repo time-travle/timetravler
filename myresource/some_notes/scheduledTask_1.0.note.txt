@@ -12,7 +12,7 @@ ScheduledExecutorService
 
 
 @Scheduled(cron = "0/5 * * * * ?") Cron表达式参数分别表示：
-    秒（0~59） 例如0/5表示每5秒
+    秒（0~59） 例如0/5表示每5秒  例如1/5表示 从第一秒开始 每5秒触发一次
     分（0~59）
     时（0~23）
     日（0~31）的某天，需计算
@@ -23,7 +23,7 @@ ScheduledExecutorService
 四种方式：Timer、ScheduledExecutorService、SpringTask、Quartz。
 
 
-    使用java的Timer
+    使用java的 Timer
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         try {
             Date date = dateFormat.parse("2018-07-11 12:00:00.000");
@@ -38,7 +38,7 @@ ScheduledExecutorService
         }者是在任务开始就计算时间，有并发的情况
         
         解释：date是开始时间，2000ms是定时任务周期，每2s执行一次
-        timer有2中方法schedule和scheduleAtFixedRate，前者会等任务结束在开始计算时间间隔，后
+        timer有2中方法 schedule 和 scheduleAtFixedRate，前者会等任务结束在开始计算时间间隔，后
     使用ScheduledExecutorService
         scheduledExecutorService.schedule(new Runnable() {
                     @Override
@@ -66,7 +66,7 @@ ScheduledExecutorService
                 }, 1, 1, TimeUnit.SECONDS);
         解释：延迟1s启动，在前一个任务执行完成之后，延迟1s在执行  
 
-    使用SpringTask
+    使用 SpringTask
         写任务类
             import org.slf4j.Logger;
             import org.slf4j.LoggerFactory;
@@ -88,8 +88,8 @@ ScheduledExecutorService
                 }
             }
             解释：
-            task1是每隔5s执行一次，{秒} {分} {时} {日期} {月} {星期}
-            task2是延迟1s,每隔1S执行一次
+            task1 是每隔5s执行一次，{秒} {分} {时} {日期} {月} {星期}
+            task2 是延迟1s,每隔1S执行一次
         配置文件修改
             （1）简单版
             <task:annotation-driven/>
