@@ -1,0 +1,11 @@
+feign:
+  #开启 Feign 对 Hystrix 的支持
+  hystrix:
+    enabled: true
+  compression:
+    request:   # 请求  由于开启GZIP压缩之后，Feign之间的调用数据通过二进制协议进行传输
+      enabled: false # true 开启
+      min-request-size: 2048 #配置压缩数据大小的下限
+      mime-types: text/xml,application/xml,application/json #开启支持压缩的MIME TYPE
+    response:  #响应
+      enabled: false  # true 开启响应GZIP压缩

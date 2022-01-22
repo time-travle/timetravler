@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/subs_user?autoReconnect=true&useUnicode=true&createDatabaseIfNotExist=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC
+    username: (encryptsubs)Sx4DCRRl2lF5PPwySygwqI/JC8PRxGem4rvuK7xdo9g=
+    password: (encryptsubs)RwAWGEO0VlpjREVW4HyrVBIxuPfxtEaKCuKTRbINE8I=
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    name: (encryptsubs)CtSCDZUisCVUNiIcRkKn8OIrB3mDVX21jULsTmTl28k=

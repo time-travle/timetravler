@@ -1,0 +1,19 @@
+port:
+  master-eureka: 8761
+  second-eureka: 8762
+  cache: 9001
+  common: 9002
+  email: 9003
+  file: 9004
+  gateway: 9005
+  message: 9006
+  schedule: 9007
+  system: 9008
+  websocket: 9009
+  subs: 9010
+  acct: 9011
+  cust: 9012
+  addr: 9013
+  prod: 9014
+  order: 9015
+  cert: 9016

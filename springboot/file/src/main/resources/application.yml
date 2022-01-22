@@ -1,0 +1,10 @@
+server:
+  port: ${port.file}
+spring:
+  profiles:
+    active: dev
+    include: base,allbase
+  application:
+    name: file
+
+

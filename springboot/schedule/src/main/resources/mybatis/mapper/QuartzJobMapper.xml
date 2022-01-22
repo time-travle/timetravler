@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.joven.schedule.mapper.QuartzJobMapper">
+
+    <resultMap type="org.joven.schedule.entity.QuartzJobEntity" id="quartzJobMap">
+        <result property="id" column="id"/>
+        <result property="jobName" column="job_name"/>
+        <result property="groupName" column="group_name"/>
+        <result property="beanName" column="bean_name"/>
+        <result property="className" column="class_name"/>
+        <result property="params" column="params"/>
+        <result property="cronExpression" column="cron_expression"/>
+        <result property="status" column="status"/>
+        <result property="restartOnAppStart" column="restart_on_app_start"/>
+        <result property="remark" column="remark"/>
+        <result property="creator" column="creator"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updater" column="updater"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+
+</mapper>

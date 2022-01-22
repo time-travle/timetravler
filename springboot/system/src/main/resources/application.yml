@@ -1,0 +1,10 @@
+server:
+  port: ${port.system}
+spring:
+  profiles:
+    active: dev
+    include: base,allbase
+  application:
+    name: system
+
+

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <property name="logback.debug.dir" value="/log/message/debug"/>
+    <property name="logback.info.dir" value="/log/message/info"/>
+    <property name="logback.warn.dir" value="/log/message/warn"/>
+    <property name="logback.error.dir" value="/log/message/error"/>
+    <property name="logback.filename" value="message"/>
+
+    <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 此日志文件只记录DEBUG级别日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+        如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天
+        的日志改名为今天的日期。即，<File> 的日志都是当天的。
+        -->
+        <File>${logback.debug.dir}/${logback.filename}.log</File>
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>${logback.debug.dir}/${logback.filename}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!--只保留最近5天的日志-->
+            <maxHistory>5</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <totalSizeCap>200MB</totalSizeCap>
+            <!--按大小分割同一天的-->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>25MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!--日志输出编码格式化-->
+        <encoder class="org.joven.base.convert.LogBackExEncoder">
+            <charset>UTF-8</charset>
+                <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ==== [thread] ==== %-5level %logger{50} %line - %msg%n</pattern>-->
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%T] %logger{50} %line - %msg%n</pattern>
+                <!-- 使用内置模板 -->
+                <!--<pattern>${FILE_LOG_PATTERN}</pattern>-->
+        </encoder>
+    </appender>
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 此日志文件只记录INFO级别日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>${logback.info.dir}/${logback.filename}.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logback.info.dir}/${logback.filename}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>200MB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>25MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ==== [%-15thread] ==== %-5level %logger{50} %line - %msg%n</pattern>-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{50} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 此日志文件只记录WARN级别日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>${logback.warn.dir}/${logback.filename}.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logback.warn.dir}/${logback.filename}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>200MB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>25MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ==== [%-15thread] ==== %-5level %logger{50} %line - %msg%n</pattern>-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{50} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 此日志文件只记录ERROR级别日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>${logback.error.dir}/${logback.filename}.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logback.error.dir}/${logback.filename}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>200MB</totalSizeCap>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>25MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ==== [%-15thread] ==== %-5level %logger{50} %line - %msg%n</pattern>-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{50} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 开发 输出日志到控制台-->
+    <springProfile name="dev">
+        <!--将org.joven的日志开启到debug-->
+        <logger name="org.joven" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+    </springProfile>
+    <!-- 测试、生产环境 输出日志到文件-->
+    <springProfile name="uat,docker,prod">
+        <logger name="org.joven" level="DEBUG" additivity="false">
+            <appender-ref ref="DEBUG_FILE"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="WARN_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </logger>
+    </springProfile>
+    <!--将总的日志输出开关关了-->
+    <root level="OFF"/>
+</configuration>

@@ -1,0 +1,9 @@
+server:
+  port: ${port.common}
+spring:
+  profiles:
+    active: dev
+    include: base,allbase
+  application:
+    name: common
+

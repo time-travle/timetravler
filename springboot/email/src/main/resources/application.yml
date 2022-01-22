@@ -1,0 +1,10 @@
+server:
+  port: ${port.email}
+spring:
+  profiles:
+    active: dev
+    include: base,allbase
+  application:
+    name: email
+
+

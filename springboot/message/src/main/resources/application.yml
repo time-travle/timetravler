@@ -1,0 +1,10 @@
+server:
+  port: ${port.message}
+spring:
+  profiles:
+    active: dev
+    include: base,allbase
+  application:
+    name: message
+
+

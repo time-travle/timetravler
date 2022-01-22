@@ -1,0 +1,3 @@
+spring:
+  profiles:
+    include: feign,hystrix,ribbon,logging,mybatis,pagehelper,port,redis,url,eureka

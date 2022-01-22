@@ -1,0 +1,31 @@
+spring:
+  quartz:
+    properties:
+      org:
+        quartz:
+          # JobStore 相关配置
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX # JobStore 实现类
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_ # Quartz 表前缀
+            isClustered: true # 是集群模式
+            clusterCheckinInterval: 20000  # 检入到数据库中的频率(单位毫秒)。clusterChedkinInterval越小，Scheduler节点检查失败的 Scheduler实例就越频繁。默认值是 15000(即15秒)。
+            misfireThreshold: 60000
+            useProperties: false
+          # 线程池相关配置
+          threadPool:
+            threadCount: 10 # 线程池大小。默认为 10 。
+            threadPriority: 5 # 线程优先级
+            class: org.quartz.simpl.SimpleThreadPool # 线程池类型
+            threadsInheritContextClassLoaderOfInitializingThread: true
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO
+            makeSchedulerThreadDaemon: true
+    job-store-type: jdbc # 使用数据库存储
+    scheduler-name: QuartzScheduler # 相同 Scheduler 名字的节点，形成一个 Quartz 集群
+    wait-for-jobs-to-complete-on-shutdown: true # 应用关闭时，是否等待定时任务执行完成。默认为 false ，建议设置为 true
+    overwrite-existing-jobs: true
+    jdbc:
+      initialize-schema: always # 是否自动使用 SQL 初始化 Quartz 表结构。这里设置成 never ，我们手动创建表结构。
+      schema: classpath:/schema/tables_mysql.sql

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.joven.common.mapper.SequenceMapper">
+
+    <select id="getCurrentSeqVal" parameterType="java.lang.String" resultType="java.lang.String">
+        <if test="seqName =='' or seqName ==null">
+            select currentval('DEFAULT_SEQ')
+        </if>
+        <if test="seqName != '' and seqName != null">
+            select currentval(#{seqName})
+        </if>
+        from dual
+    </select>
+    <select id="getSeqNextVal" parameterType="java.lang.String" resultType="java.lang.String">
+        <if test="seqName =='' or seqName ==null">
+            select nextval('DEFAULT_SEQ')
+        </if>
+        <if test="seqName != '' and seqName != null">
+            select nextval(#{seqName})
+        </if>
+        from dual
+    </select>
+    <!--inf_dict_item_lang:只是为了找一个比较大的表-->
+    <select id="getBatchSeqVal" resultType="java.lang.String">
+        <if test="seqName =='' or seqName ==null">
+            select nextval('DEFAULT_SEQ') AS seqNum
+        </if>
+        <if test="seqName != '' and seqName != null">
+            select nextval(#{seqName}) AS seqNum
+        </if>
+        from inf_dict_item_lang
+        <if test="num != 0 and num != null">
+            limit ${num}
+        </if>
+        <if test="num == 0 or num == null">
+            limit 1
+        </if>
+    </select>
+</mapper>

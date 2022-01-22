@@ -1,0 +1,6 @@
+#https://blog.csdn.net/qq_27317475/article/details/81168241
+pagehelper:
+  helper-dialect: mysql
+  params: count=countSql
+  reasonable: true
+  support-methods-arguments: true

@@ -1,0 +1,8 @@
+server:
+  port: ${port.cert}
+spring:
+  profiles:
+    active: dev
+    include: base,allbase
+  application:
+    name: cert

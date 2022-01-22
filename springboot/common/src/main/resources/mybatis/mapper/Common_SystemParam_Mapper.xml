@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.joven.common.mapper.SystemParamMapper">
+    <!--开启二级缓存，空标签即可表示开启缓存-->
+    <cache/>
+    <!--参考 Wiki：https://www.cnblogs.com/canger/p/9997422.html-->
+    <!--单步查询-->
+    <resultMap id="systemParamEntityResp" type="org.joven.common.entity.SystemParamEntity">
+
+        <result column="param_id" property="paramId" javaType="java.lang.String"/>
+        <result column="param_name" property="paramName" javaType="java.lang.String"/>
+        <result column="param_value" property="paramValue" javaType="java.lang.String"/>
+        <result column="param_desc" property="paramDesc" javaType="java.lang.String"/>
+        <result column="eff_date" property="effDate" javaType="java.util.Date"/>
+        <result column="exp_date" property="expDate" javaType="java.util.Date"/>
+
+        <result column="ext_1" property="ext1" javaType="java.lang.String"/>
+        <result column="ext_2" property="ext2" javaType="java.lang.String"/>
+        <result column="ext_3" property="ext3" javaType="java.lang.String"/>
+        <result column="ext_4" property="ext4" javaType="java.lang.String"/>
+        <result column="ext_5" property="ext5" javaType="java.lang.String"/>
+
+        <collection property="lang" ofType="org.joven.common.entity.SystemParamLangEntity">
+            <result column="rel_param_id" property="relParamId" javaType="java.lang.String"/>
+            <result column="locate" property="locate" javaType="java.lang.String"/>
+            <result column="name" property="name" javaType="java.lang.String"/>
+            <result column="desc" property="desc" javaType="java.lang.String"/>
+        </collection>
+    </resultMap>
+    <!--查询系统参数对应的值，无关乎多语言展示-->
+    <select id="getSystemParamValue" parameterType="java.lang.String" resultType="java.lang.String">
+        select t1.param_value
+        from inf_system_param t1
+        where t1.param_id = #{systemParamId}
+        and unix_timestamp() > unix_timestamp(t1.eff_date)
+        and unix_timestamp(t1.exp_date) > unix_timestamp()
+    </select>
+    <!--根据系统参数查询系统参数对应的全部信息-->
+    <select id="getSystemParamInfo" parameterType="java.lang.String" resultMap="systemParamEntityResp">
+        select param_id, param_name, param_value, param_desc, eff_date, exp_date, ext_1, ext_2, ext_3, ext_4, ext_5,
+        rel_param_id,locate, name, 'desc'
+        from inf_system_param t1
+        left join inf_system_param_lang t2
+        on t1.param_id = t2.rel_param_id
+        where unix_timestamp() > unix_timestamp(t1.eff_date)
+        and unix_timestamp(t1.exp_date) > unix_timestamp()
+        and t1.param_id = #{systemParamId}
+        <if test="locate != null and locate != ''">
+            and t2.locate = #{locate}
+        </if>
+    </select>
+    <!--根据多个系统参数查询系统参数对应的全部信息-->
+    <select id="getSystemParamInfos" parameterType="ArrayList" resultMap="systemParamEntityResp">
+        select param_id, param_name, param_value, param_desc, eff_date, exp_date, ext_1, ext_2, ext_3, ext_4, ext_5,
+        rel_param_id,locate, name, 'desc'
+        from inf_system_param t1
+        left join inf_system_param_lang t2
+        on t1.param_id = t2.rel_param_id
+        where unix_timestamp() > unix_timestamp(t1.eff_date)
+        and unix_timestamp(t1.exp_date) > unix_timestamp()
+        and t1.param_id in
+        <foreach collection="systemParamIds" open="(" separator="," close=")" item="systemParamId" index="">
+            #{systemParamId}
+        </foreach>
+        <if test="locate != null and locate != ''">
+            and t2.locate = #{locate}
+        </if>
+    </select>
+
+    <!--修改系统参数的值-->
+    <update id="updateSystemValueBySystemIds" parameterType="ArrayList">
+        <foreach collection="idAndValueMapList" item="item" separator=";" open="BEGIN" close="END" index="">
+            update inf_system_param t set t.param_value = #{item.paramValue} where t.param_id=#{item.paramId}
+        </foreach>
+    </update>
+    <!--批量更新对应多语言-->
+    <update id="updateSystemLangByIds" parameterType="ArrayList">
+        <foreach collection="systemParamLangList" index="" close="END" open="BEGIN" separator=";" item="item">
+            update inf_system_param_lang t set t.locate=#{item.locate},t.`desc`=#{item.desc},t.name =
+            #{item.name}
+            where t.id = #{item.id}
+            <if test="item.relParamId != null and item.relParamId != ''">
+                and t.rel_param_id = #{item.relParamId}
+            </if>
+        </foreach>
+    </update>
+    <!--更新对应多语言-->
+    <update id="updateSystemLangById" parameterType="org.joven.common.entity.SystemParamLangEntity">
+        update inf_system_param_lang t set t.locate=#{locate},t.`desc`=#{desc},t.name = #{name}
+        where t.id = #{id}
+        <if test="relParamId != null and relParamId != ''">
+            and t.rel_param_id = #{relParamId}
+        </if>
+    </update>
+
+    <!--将失效的 重新激活-->
+    <update id="activeInvalidSystemParam" parameterType="ArrayList">
+        <foreach collection="systemParamMaps" item="item" open="BEGIN" separator=";" close="END" index="">
+            update inf_system_param set exp_date = timestamp(#{item.expDate})
+            where param_id =#{item.paramId}
+        </foreach>
+    </update>
+    <!--将失效时间批量提前 不进行真正删除-->
+    <update id="deleteSystemParamInfoByIds" parameterType="ArrayList">
+        update inf_system_param set exp_date = current_timestamp() where param_id in
+        <foreach collection="systemParamIds" item="item" open="（" separator="," close=")" index="">
+            #{item}
+        </foreach>
+    </update>
+    <!--将失效时间提前 不进行真正删除-->
+    <update id="deleteSystemParamInfo" parameterType="java.lang.String">
+        update inf_system_param
+        set exp_date = current_timestamp()
+        where param_id = #{systemParamId}
+    </update>
+    <!--批量向数据库添加系统参数-->
+    <insert id="batchAddSystemParam2DB" parameterType="ArrayList">
+        <foreach collection="systemParamEntityList" index="" item="item" open="BEGIN" close="END" separator=";">
+            insert into inf_system_param
+            (param_id, param_name, param_value, param_desc, eff_date, exp_date,
+            ext_1, ext_2, ext_3, ext_4, ext_5)
+            values
+            (item.paramId,item.paramName,item.paramValue,item.paramDesc,item.effDate,item.expDate,
+            item.ext1,item.ext2,item.ext3,item.ext4,item.ext5);
+            <foreach collection="lang" separator=";" close="" open="" item="langItem" index="">
+                insert into inf_system_param_lang
+                (rel_param_id, locate, name, `desc`)
+                values
+                (langItem.relParamId,langItem,locate,langItem.name,langItem.desc)
+            </foreach>
+        </foreach>
+    </insert>
+    <!--向数据库添加系统参数-->
+    <insert id="addSystemParam2DB" parameterType="org.joven.common.entity.SystemParamEntity">
+        insert into inf_system_param
+        (param_id, param_name, param_value, param_desc, eff_date, exp_date,
+        ext_1, ext_2, ext_3, ext_4, ext_5)
+        values
+        (item.paramId,item.paramName,item.paramValue,item.paramDesc,item.effDate,item.expDate,
+        item.ext1,item.ext2,item.ext3,item.ext4,item.ext5);
+        <foreach collection="lang" separator=";" close="" open="" item="langItem" index="">
+            insert into inf_system_param_lang
+            (rel_param_id, locate, name, `desc`)
+            values
+            (langItem.relParamId,langItem,locate,langItem.name,langItem.desc)
+        </foreach>
+
+    </insert>
+</mapper>

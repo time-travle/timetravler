@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.joven.common.mapper.DictInfoMapper">
+    <!--开启二级缓存，空标签即可表示开启缓存-->
+    <cache/>
+    <resultMap id="dictItemMap" type="org.joven.common.entity.DictItemEntity">
+        <result column="dict_code" property="dictCode" javaType="java.lang.String"/>
+        <result column="item_code" property="itemCode" javaType="java.lang.String"/>
+        <result column="item_value" property="itemValue" javaType="java.lang.String"/>
+        <result column="item_desc" property="itemDesc" javaType="java.lang.String"/>
+        <result column="status" property="status" javaType="java.lang.String"/>
+        <result column="ext1" property="itemExt1" javaType="java.lang.String"/>
+        <result column="ext2" property="itemExt2" javaType="java.lang.String"/>
+        <result column="ext3" property="itemExt3" javaType="java.lang.String"/>
+        <result column="ext4" property="itemExt4" javaType="java.lang.String"/>
+        <result column="ext5" property="itemExt5" javaType="java.lang.String"/>
+        <collection property="locates" ofType="org.joven.common.entity.DictLocateEntity">
+            <result column="item_name" property="itemName" javaType="java.lang.String"/>
+            <result column="locate" property="locate" javaType="java.lang.String"/>
+            <result column="desc" property="desc" javaType="java.lang.String"/>
+        </collection>
+    </resultMap>
+    <select id="getDictItemsByCode" parameterType="String" resultMap="dictItemMap">
+        select dict_code, item_code, item_value, item_desc, status, ext1, ext2, ext3, ext4, ext5,
+        item_name, locate, `desc`
+        from inf_dict_item t1
+        left join inf_dict_item_lang t2 on t1.item_id = t2.dict_item_id
+        where t1.dict_code = #{dictCode}
+        <if test="locate!='' and locate != null">
+            and t2.locate = #{locate}
+        </if>
+    </select>
+
+    <select id="getDictItemsByCodes" resultMap="dictItemMap">
+        select dict_code, item_code, item_value, item_desc, status, ext1, ext2, ext3, ext4, ext5,
+        item_name, locate, `desc`
+        from inf_dict_item t1
+        left join inf_dict_item_lang t2 on t1.item_id =
+        t2.dict_item_id
+        where t1.dict_code in
+        <foreach collection="dictCodes" index="" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        <if test="locate!='' and locate != null">
+            and t2.locate = #{locate}
+        </if>
+    </select>
+    <resultMap id="dictInfoEntity" type="org.joven.common.entity.DictInfoEntity">
+        <result column="dictCode" property="dictCode" javaType="java.lang.String"/>
+        <result column="dictName" property="dictName" javaType="java.lang.String"/>
+        <result column="dictDesc" property="dictDesc" javaType="java.lang.String"/>
+        <result column="dictEffTime" property="effTime" javaType="java.util.Date"/>
+        <result column="dictExpTime" property="expTime" javaType="java.util.Date"/>
+        <result column="dictStatus" property="status" javaType="java.lang.String"/>
+        <result column="dictExt1" property="ext1" javaType="java.lang.String"/>
+        <result column="dictExt2" property="ext2" javaType="java.lang.String"/>
+        <result column="dictExt3" property="ext3" javaType="java.lang.String"/>
+        <result column="dictExt4" property="ext4" javaType="java.lang.String"/>
+        <result column="dictExt5" property="ext5" javaType="java.lang.String"/>
+        <collection property="locate" ofType="org.joven.common.entity.DictLocateEntity">
+            <result column="dictCode" property="parentReationCode" javaType="java.lang.String"/>
+            <result column="dictLangName" property="itemName" javaType="java.lang.String"/>
+            <result column="dictLangLocate" property="locate" javaType="java.lang.String"/>
+            <result column="dictLangDesc" property="desc" javaType="java.lang.String"/>
+        </collection>
+        <collection property="dictItems" ofType="org.joven.common.entity.DictItemEntity">
+            <result column="dictCode" property="dictCode" javaType="java.lang.String"/>
+            <result column="dictItemCode" property="itemCode" javaType="java.lang.String"/>
+            <result column="dictItemValue" property="itemValue" javaType="java.lang.String"/>
+            <result column="dictItemDesc" property="itemDesc" javaType="java.lang.String"/>
+            <result column="dictItemStatus" property="status" javaType="java.lang.String"/>
+            <result column="dictItemExt1" property="itemExt1" javaType="java.lang.String"/>
+            <result column="dictItemExt2" property="itemExt2" javaType="java.lang.String"/>
+            <result column="dictItemExt3" property="itemExt3" javaType="java.lang.String"/>
+            <result column="dictItemExt4" property="itemExt4" javaType="java.lang.String"/>
+            <result column="dictItemExt5" property="itemExt5" javaType="java.lang.String"/>
+            <collection property="locates" ofType="org.joven.common.entity.DictLocateEntity">
+                <result column="dictItemLangName" property="itemName" javaType="java.lang.String"/>
+                <result column="dictItemLangLocate" property="locate" javaType="java.lang.String"/>
+                <result column="dictItemLangDesc" property="desc" javaType="java.lang.String"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getDictInfo" parameterType="String">
+        select
+        t1.dict_code as dictCode,
+        t1.dict_name as dictName,
+        t1.dict_desc as dictDesc,
+        t1.eff_time as dictEffTime,
+        t1.exp_time as dictExpTime,
+        t1.status as dictStatus,
+        t1.ext1 as dictExt1,
+        t1.ext2 as dictExt2,
+        t1.ext3 as dictExt3,
+        t1.ext4 as dictExt4,
+        t1.ext5 as dictExt5,
+
+        t2.dict_name as dictLangName,
+        t2.locate as dictLangLocate,
+        t2.desc as dictLangDesc,
+
+        t3.item_code as dictItemCode,
+        t3.item_value as dictItemValue,
+        t3.item_desc as dictItemDesc ,
+        t3.status as dictItemStatus ,
+        t3.ext1 as dictItemExt1,
+        t3.ext2 as dictItemExt2,
+        t3.ext3 as dictItemExt3,
+        t3.ext4 as dictItemExt4,
+        t3.ext5 as dictItemExt5,
+
+        t4.item_name as dictItemLangName,
+        t4.locate as dictItemLangLocate,
+        t4.`desc` as dictItemLangDesc
+        from
+        inf_dict t1,
+        inf_dict_lang t2,
+        inf_dict_item t3,
+        inf_dict_item_lang t4
+        where
+        t1.status = '1'
+        and t1.dict_code=t2.dict_code
+        and t3.dict_code=t1.dict_code
+        and t3.item_id = t4.dict_item_id
+        and t4.locate=t2.locate
+        <if test="dictCode!= '' and dictCode!=null">
+            and t1.dict_code = #{dictCode}
+        </if>
+        <if test="locate!='' and locate != null">
+            and t2.locate = #{locate}
+        </if>
+    </select>
+    <select id="getDictItemValue" parameterType="String" resultType="String">
+        select t.item_value
+        from inf_dict_item t
+        where t.dict_code = #{dictCode}
+        and t.item_code = #{itemCode}
+    </select>
+    <update id="invalidDictInfo" parameterType="ArrayList">
+        update inf_dict
+        set status='0',
+        exp_time = current_timestamp()
+        where dict_code in
+        <foreach collection="dictCodes" separator="," open="(" close=")" item="item" index="">
+            #{item}
+        </foreach>
+
+    </update>
+    <update id="reactivateDictInfo">
+        update inf_dict
+        set status = '1',
+        exp_time = timestamp(#{expTime})
+        where dict_code in
+        <foreach collection="dictCodes" separator="," open="(" close=")" item="item" index="">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateDictItem" parameterType="org.joven.common.entity.DictItemEntity">
+        BEGIN
+        update inf_dict_item t
+        set t.item_value=#{itemValue},
+        t.item_desc=#{itemDesc},
+        t.status=#{status},
+        t.ext1=#{itemExt1},
+        t.ext2=#{itemExt2},
+        t.ext3=#{itemExt3},
+        t.ext4=#{itemExt4},
+        t.ext5=#{itemExt5}
+        where t.item_id = #{itemId}
+        <if test="locates != null and locates.size() > 0 ">
+            ;
+            <foreach collection="locates" item="item" close="" open="" separator=";" index="">
+                update inf_dict_item_lang t
+                set t.locate = #{item.locate},
+                t.`desc`=#{item.desc},
+                t.item_name=#{item.itemName}
+                where dict_item_id = #{item.parentReationCode}
+            </foreach>
+        </if>
+        END;
+    </update>
+    <update id="updateDictInfo" parameterType="org.joven.common.entity.DictInfoEntity">
+        BEGIN
+        update inf_dict t
+        set t.status =#{status},
+        t.dict_name=#{dictName},
+        t.dict_desc=#{dictDesc},
+        t.exp_time=#{effTime},
+        t.eff_time=#{expTime},
+        t.ext1=#{ext1},
+        t.ext2=#{ext2},
+        t.ext3=#{ext3},
+        t.ext4=#{ext4},
+        t.ext5=#{ext5}
+        where t.dict_code = #{dictCode}
+        <if test="locate != null and loate.size()>0">
+            ;
+            <foreach collection="locate" index="" separator=";" open="" close="" item="locateItem">
+                update inf_dict_lang t
+                set t.dict_name=#{dictItem.itemName},
+                t.`desc`=#{dictItem.desc}
+                where
+                dict_code=#{dictCode}
+                and
+                t.locate=#{dictItem.locate}
+            </foreach>
+        </if>
+        <if test="dictItems != null and dictItems.size()>0">
+            ;
+            <foreach collection="dictItems" item="dictItem" separator=";" close="" index="" open="">
+                update inf_dict_item t
+                set t.item_value=#{dictItem.itemValue},
+                t.item_desc=#{dictItem.itemDesc},
+                t.status=#{dictItem.status},
+                t.ext1=#{dictItem.itemExt1},
+                t.ext2=#{dictItem.itemExt2},
+                t.ext3=#{dictItem.itemExt3},
+                t.ext4=#{dictItem.itemExt4},
+                t.ext5=#{dictItem.itemExt5}
+                where t.item_id = #{dictItem.itemId}
+                <if test="dictItem.locates != null and dictItem.locates.size() > 0 ">
+                    ;
+                    <foreach collection="locates" item="dictItemItem" close="" open="" separator=";" index="">
+                        update inf_dict_item_lang t
+                        set t.locate = #{dictItemItem.locate},
+                        t.`desc`=#{dictItemItem.desc},
+                        t.item_name=#{dictItemItem.itemName}
+                        where dict_item_id = #{dictItemItem.parentReationCode}
+                    </foreach>
+                </if>
+            </foreach>
+        </if>
+        END;
+    </update>
+    <!--界面新增字典-->
+    <insert id="addDictInfo2DB" parameterType="org.joven.common.entity.DictInfoEntity">
+
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,8 @@
+server:
+  port: ${port.prod}
+spring:
+  profiles:
+    active: dev
+    include: base,allbase
+  application:
+    name: prod

@@ -1,0 +1,10 @@
+server:
+  port: ${port.cache}
+spring:
+  profiles:
+    include: base,allbase
+    active: dev
+  application:
+    name: cache
+
+

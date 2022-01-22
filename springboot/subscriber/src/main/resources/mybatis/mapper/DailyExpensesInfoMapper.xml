@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.joven.subscriber.mapper.DailyExpensesInfoMapper">
+    <!--开启二级缓存，空标签即可表示开启缓存-->
+    <cache/>
+
+    <sql id="inf_daily_expenses_column_list">
+            id,
+            name,
+            value,
+            currency,
+            paymentMethod,
+            reason,
+            eff_time,
+            inputTime,
+            haveCertificate,
+            isreturn,
+            sub_id,
+            informationSources,
+            remark1,
+            remark2
+    </sql>
+
+    <update id="bathModifyInfoById" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            UPDATE inf_daily_expenses
+            <set>
+                <if test="item.name != null and item.name != ''"> name = item.name </if>
+                <if test="item.value != null and item.value != ''"> name = item.value </if>
+                <if test="item.currency != null and item.currency != ''"> name = item.currency </if>
+                <if test="item.paymentMethod != null and item.paymentMethod != ''"> name = item.paymentMethod </if>
+                <if test="item.reason != null and item.reason != ''"> name = item.reason </if>
+                <if test="item.eff_time != null and item.eff_time != ''"> name = item.eff_time </if>
+                <if test="item.inputTime != null and item.inputTime != ''"> name = item.inputTime </if>
+                <if test="item.haveCertificate != null and item.haveCertificate != ''"> name = item.haveCertificate </if>
+                <if test="item.isreturn != null and item.isreturn != ''"> name = item.isreturn </if>
+                <if test="item.sub_id != null and item.sub_id != ''"> name = item.sub_id </if>
+                <if test="item.informationSources != null and item.informationSources != ''"> name = item.informationSources </if>
+                <if test="item.remark1 != null and item.remark1 != ''"> name = item.remark1 </if>
+                <if test="item.remark2 != null and item.remark2 != ''"> name = item.remark2 </if>
+            </set>
+            where id=#{item.id}
+        </foreach>
+    </update>
+
+    <update id="modifyInfoById" parameterType="org.joven.subscriber.entity.DailyExpensesInfoEntity">
+            UPDATE inf_daily_expenses
+            <set>
+                <if test="dailyExpensesInfo.name != null and dailyExpensesInfo.name != ''"> name = dailyExpensesInfo.name </if>
+                <if test="dailyExpensesInfo.value != null and dailyExpensesInfo.value != ''"> name = dailyExpensesInfo.value </if>
+                <if test="dailyExpensesInfo.currency != null and dailyExpensesInfo.currency != ''"> name = dailyExpensesInfo.currency </if>
+                <if test="dailyExpensesInfo.paymentMethod != null and dailyExpensesInfo.paymentMethod != ''"> name = dailyExpensesInfo.paymentMethod </if>
+                <if test="dailyExpensesInfo.reason != null and dailyExpensesInfo.reason != ''"> name = dailyExpensesInfo.reason </if>
+                <if test="dailyExpensesInfo.eff_time != null and dailyExpensesInfo.eff_time != ''"> name = dailyExpensesInfo.eff_time </if>
+                <if test="dailyExpensesInfo.inputTime != null and dailyExpensesInfo.inputTime != ''"> name = dailyExpensesInfo.inputTime </if>
+                <if test="dailyExpensesInfo.haveCertificate != null and dailyExpensesInfo.haveCertificate != ''"> name = dailyExpensesInfo.haveCertificate </if>
+                <if test="dailyExpensesInfo.isreturn != null and dailyExpensesInfo.isreturn != ''"> name = dailyExpensesInfo.isreturn </if>
+                <if test="dailyExpensesInfo.sub_id != null and dailyExpensesInfo.sub_id != ''"> name = dailyExpensesInfo.sub_id </if>
+                <if test="dailyExpensesInfo.informationSources != null and dailyExpensesInfo.informationSources != ''"> name = dailyExpensesInfo.informationSources </if>
+                <if test="dailyExpensesInfo.remark1 != null and dailyExpensesInfo.remark1 != ''"> name = dailyExpensesInfo.remark1 </if>
+                <if test="dailyExpensesInfo.remark2 != null and dailyExpensesInfo.remark2 != ''"> name = dailyExpensesInfo.remark2 </if>
+            </set>
+            where id=#{dailyExpensesInfo.id}
+
+    </update>
+
+    <select id="getAllInfos" resultType="org.joven.subscriber.entity.DailyExpensesInfoEntity" parameterType="int">
+        select
+        <include refid="inf_daily_expenses_column_list"></include>
+        from inf_daily_expenses t
+        order by eff_time desc
+        limit ${beginNum} , ${pageSizeNum}
+    </select>
+
+    <select id="getInfoById" parameterType="String" resultType="org.joven.subscriber.entity.DailyExpensesInfoEntity">
+        select
+        <include refid="inf_daily_expenses_column_list"></include>
+        from inf_daily_expenses
+         where id=${id}
+    </select>
+
+    <select id="getInfoByIds" resultType="org.joven.subscriber.entity.DailyExpensesInfoEntity">
+        select
+        <include refid="inf_daily_expenses_column_list"></include>
+        from
+        inf_daily_expenses
+        where 
+        <foreach collection="ids" item="id" separator="," open="(" close=")" index="index">
+            ${id}
+        </foreach>
+    </select>
+
+    <delete id="deleteInfoByIds">
+        delete
+        <include refid="inf_daily_expenses_column_list"></include>
+        from
+        inf_daily_expenses
+        where
+        <foreach collection="ids" item="id" separator="," open="(" close=")" index="index">
+            #{id, jdbcType=NUMERIC}
+        </foreach>
+    </delete>
+
+    <insert id="bathInsertInfos" parameterType="java.util.List">
+        insert into inf_daily_expenses
+        <include refid="inf_daily_expenses_column_list"></include>
+        values
+        <foreach collection="list" item="one" index="index" separator="," close="" open="">
+            (
+            #{one.id},
+            #{one.name},
+            #{one.value},
+            #{one.currency},
+            #{one.paymentMethod},
+            #{one.reason},
+            #{one.eff_time},
+            #{one.inputTime},
+            #{one.haveCertificate},
+            #{one.isreturn},
+            #{one.sub_id},
+            #{one.informationSources},
+            #{one.remark1},
+            #{one.remark2}
+            )
+        </foreach>
+
+    </insert>
+</mapper>

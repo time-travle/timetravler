@@ -1,0 +1,25 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 100
+spring:
+  freemarker:
+    prefer-file-system-access: false
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      indent_output: true # 数据向界面返回时自动json化
+  messages:
+    encoding: UTF-8
+    basename: i18n/messages
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
