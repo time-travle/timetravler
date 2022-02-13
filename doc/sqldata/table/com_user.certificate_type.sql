@@ -14,3 +14,4 @@ create table com_user.certificate_type
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_bin comment '证件类型';
+  
