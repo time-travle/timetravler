@@ -18,6 +18,7 @@ CREATE TABLE com_user.`inf_dict`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 2
   DEFAULT CHARSET = utf8;
+
 DROP table if exists com_user.inf_dict_lang;
 CREATE TABLE com_user.`inf_dict_lang`
 (
@@ -32,6 +33,8 @@ CREATE TABLE com_user.`inf_dict_lang`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 3
   DEFAULT CHARSET = utf8;
+
+
 DROP table if exists com_user.inf_dict_item;
 CREATE TABLE com_user.`inf_dict_item`
 (
@@ -50,6 +53,7 @@ CREATE TABLE com_user.`inf_dict_item`
     UNIQUE KEY `id_UNIQUE` (`item_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
+
 DROP table if exists com_user.inf_dict_item_lang;
 CREATE TABLE com_user.`inf_dict_item_lang`
 (
