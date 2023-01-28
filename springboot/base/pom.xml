@@ -13,7 +13,7 @@
     <name>base</name>
 
     <properties>
-        <mysql.version>8.0.20</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <sqlserver.version>4.0</sqlserver.version>
         <oracle.version>11.2.0.3</oracle.version>
         <druid.version>1.1.13</druid.version>
