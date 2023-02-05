@@ -24,29 +24,7 @@
     </properties>
     <modules>
         <module>base</module>
-        <module>baseCloud</module>
-
-        <module>eurekaMasterCenter</module>
-        <module>eurekaSecondCenter</module>
-
-        <module>cache</module>
         <module>common</module>
-        <module>email</module>
-        <module>file</module>
-        <module>gateway</module>
-        <module>message</module>
-        <module>schedule</module>
-        <module>system</module>
-        <module>websocket</module>
-
-        <module>subscriber</module>
-        <module>account</module>
-        <module>address</module>
-        <module>certificate</module>
-        <module>customer</module>
-
-        <module>order</module>
-        <module>product</module>
     </modules>
 
     <!-- Spring  Cloud  -->

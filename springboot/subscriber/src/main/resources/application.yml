@@ -1,9 +1,0 @@
-server:
-  port: ${port.subs}
-spring:
-  profiles:
-    active: dev
-    include: base,allbase
-  application:
-    name: subscriber
-

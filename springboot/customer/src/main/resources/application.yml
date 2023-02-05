@@ -1,8 +1,0 @@
-server:
-  port: ${port.cust}
-spring:
-  profiles:
-    active: dev
-    include: base,allbase
-  application:
-    name: cust
